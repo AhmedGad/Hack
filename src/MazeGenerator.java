@@ -11,13 +11,17 @@ public class MazeGenerator {
 	}
 
 	public char[][] getMap() {
-		char[][] charMap = new char[map.length][map[0].length];
+		char[][] charMap = new char[map.length + 1][map[0].length + 1];
 		for (int i = 0; i < map.length; i++)
 			for (int j = 0; j < map[i].length; j++)
 				if (map[i][j] == 0)
-					charMap[i][j] = '.';
+					charMap[i + 1][j + 1] = '.';
 				else
-					charMap[i][j] = '#';
+					charMap[i + 1][j + 1] = '#';
+		for (int i = 0; i < charMap.length; i++)
+			charMap[i][0] = '#';
+		for (int i = 0; i < charMap[0].length; i++)
+			charMap[0][i] = '#';
 		return charMap;
 	}
 

@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -27,7 +28,6 @@ public class MazeUI extends JFrame implements KeyListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private static char[][] mazeMap;
 	private static Dimension screenSize = Toolkit.getDefaultToolkit()
 			.getScreenSize();
@@ -149,57 +149,70 @@ public class MazeUI extends JFrame implements KeyListener {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(dim);
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		mazeWidth = 100;
-		mazeHeight = 100;
+		mazeWidth = 200;
+		mazeHeight = 200;
 
-		System.out.println(getHeight() + "   " + dim.height);
+//		System.out.println(getHeight() + "   " + dim.height);
 		blockSizeWidth = (dim.width) / mazeWidth;
 		blockSizeHeight = (dim.height) / mazeHeight;
 		MazeGenerator generator = new MazeGenerator(mazeWidth, mazeHeight);
 		generator.generate();
 		mazeMap = generator.getMap();
-		drawMap();
+		// drawMap();
 		addKeyListener(this);
 	}
 
 	private void FullScreenFrame() {
 
-		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
-				.getDefaultScreenDevice();
-
-		if (gd.isFullScreenSupported()) {
-			setUndecorated(true);
-			gd.setFullScreenWindow(this);
-		} else {
-			System.err.println("Full screen not supported");
-			setSize(100, 100); // just something to let you see the window
-			setVisible(true);
-		}
+		 GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
+		 .getDefaultScreenDevice();
+		
+		 if (gd.isFullScreenSupported()) {
+		 setUndecorated(true);
+		 gd.setFullScreenWindow(this);
+		 } else {
+		 System.err.println("Full screen not supported");
+		 setSize(100, 100); // just something to let you see the window
+		 setVisible(true);
+		 }
+//		System.err.println("Full screen not supported");
+//		setSize(100, 100); // just something to let you see the window
+//		setVisible(true);
 	}
 
-	private void drawMap() throws IOException {
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		g.setColor(Color.blue);
 		for (int i = 0; i < mazeMap.length; i++) {
 			for (int j = 0; j < mazeMap[i].length; j++) {
 				if (mazeMap[i][j] == '#') {
-					contentPane.add(new BlockWall("maze-image.gif", j
-							* blockSizeWidth, i * blockSizeHeight,
-							blockSizeWidth, blockSizeHeight));
+					g.fillRect(j * blockSizeWidth, i * blockSizeHeight,
+							blockSizeWidth, blockSizeHeight);
 				}
 			}
 		}
-		for (int i = 0; i < mazeMap.length; i++) {
-			mazeMap[0][i] = '#';
-			mazeMap[0][i] = '#';
-			contentPane.add(new BlockWall("maze-image.gif", i * blockSizeWidth,
-					0, blockSizeWidth, blockSizeHeight));
-			contentPane.add(new BlockWall("maze-image.gif", 0, i
-					* blockSizeHeight, blockSizeWidth, blockSizeHeight));
-		}
 	}
+
+	// private void drawMap() throws IOException {
+	// for (int i = 0; i < mazeMap.length; i++) {
+	// for (int j = 0; j < mazeMap[i].length; j++) {
+	// if (mazeMap[i][j] == '#') {
+	// contentPane.add(new BlockWall("maze-image.gif", j
+	// * blockSizeWidth, i * blockSizeHeight,
+	// blockSizeWidth, blockSizeHeight));
+	// }
+	// }
+	// }
+	// for (int i = 0; i < mazeMap.length; i++) {
+	// mazeMap[0][i] = '#';
+	// mazeMap[0][i] = '#';
+	// contentPane.add(new BlockWall("maze-image.gif", i * blockSizeWidth,
+	// 0, blockSizeWidth, blockSizeHeight));
+	// contentPane.add(new BlockWall("maze-image.gif", 0, i
+	// * blockSizeHeight, blockSizeWidth, blockSizeHeight));
+	// }
+	// }
 
 	@Override
 	public void keyPressed(KeyEvent k) {
