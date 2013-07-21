@@ -49,83 +49,81 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 	static int di = 2, dj = 2;
 
+	// @Override
+	// public void actionPerformed(ActionEvent evt) {
+	// // if (pl.curri != pl.disti) {
+	// // if (pl.curri < pl.disti)
+	// // pl.curri += di;
+	// // else if (pl.curri > pl.distj)
+	// // pl.curri -= di;
+	// //
+	// // if (Math.abs(pl.curri - pl.disti) < di)
+	// // pl.curri = pl.disti;
+	// // }
+	// //
+	// // if (pl.currj != pl.distj) {
+	// // if (pl.currj < pl.distj)
+	// // pl.currj += dj;
+	// // else if (pl.currj > pl.distj)
+	// // pl.currj -= dj;
+	// //
+	// // if (Math.abs(pl.currj - pl.distj) < dj)
+	// // pl.currj = pl.distj;
+	// // }
+	// // }
+	// repaint();
+	// }
+
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		// if (pl.curri != pl.disti) {
-		// if (pl.curri < pl.disti)
-		// pl.curri += di;
-		// else if (pl.curri > pl.distj)
-		// pl.curri -= di;
-		//
-		// if (Math.abs(pl.curri - pl.disti) < di)
-		// pl.curri = pl.disti;
-		// }
-		//
-		// if (pl.currj != pl.distj) {
-		// if (pl.currj < pl.distj)
-		// pl.currj += dj;
-		// else if (pl.currj > pl.distj)
-		// pl.currj -= dj;
-		//
-		// if (Math.abs(pl.currj - pl.distj) < dj)
-		// pl.currj = pl.distj;
-		// }
-		// }
+		try {
+			HttpURLConnection httpConn = ClientMethods.initConnection();
+			OutputStream os = httpConn.getOutputStream();
+			if (!joined) {
+				os.write("getFreeGames".getBytes());
+				os.close();
+				InputStream in = httpConn.getInputStream();
+				byte[] buffer = new byte[1000];
+				int read;
+				String tempstr = "";
+				while ((read = in.read(buffer)) != -1)
+					tempstr += new String(buffer, 0, read);
+				in.close();
+
+				StringTokenizer tok = new StringTokenizer(tempstr);
+				games.clear();
+				while (tok.hasMoreElements())
+					games.add(new Integer(tok.nextToken()));
+			} else {
+				os.write(("gameState " + gameIndex).getBytes());
+				os.close();
+				InputStream in = httpConn.getInputStream();
+				byte[] buffer = new byte[1000];
+				int read;
+				String tempstr = "";
+				while ((read = in.read(buffer)) != -1)
+					tempstr += new String(buffer, 0, read);
+				in.close();
+
+				StringTokenizer tok = new StringTokenizer(tempstr);
+				int cnt = 0;
+				while (tok.hasMoreElements()) {
+					players.get(cnt).curri = new Integer(tok.nextToken())
+							* blockSizeHeight;
+					players.get(cnt).currj = new Integer(tok.nextToken())
+							* blockSizeWidth;
+					cnt++;
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		repaint();
 	}
 
-	static ActionListener serv_taskPerformer = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent evt) {
-			try {
-				HttpURLConnection httpConn = ClientMethods.initConnection();
-				OutputStream os = httpConn.getOutputStream();
-				if (!joined) {
-					os.write("getFreeGames".getBytes());
-					os.close();
-					InputStream in = httpConn.getInputStream();
-					byte[] buffer = new byte[1000];
-					int read;
-					String tempstr = "";
-					while ((read = in.read(buffer)) != -1)
-						tempstr += new String(buffer, 0, read);
-					in.close();
-
-					StringTokenizer tok = new StringTokenizer(tempstr);
-					games.clear();
-					while (tok.hasMoreElements())
-						games.add(new Integer(tok.nextToken()));
-				} else {
-					os.write(("gameState " + gameIndex).getBytes());
-					os.close();
-					InputStream in = httpConn.getInputStream();
-					byte[] buffer = new byte[1000];
-					int read;
-					String tempstr = "";
-					while ((read = in.read(buffer)) != -1)
-						tempstr += new String(buffer, 0, read);
-					in.close();
-
-					StringTokenizer tok = new StringTokenizer(tempstr);
-					int cnt = 0;
-					while (tok.hasMoreElements()) {
-						players.get(cnt).curri = new Integer(tok.nextToken())
-								* blockSizeHeight;
-						players.get(cnt).currj = new Integer(tok.nextToken())
-								* blockSizeWidth;
-						cnt++;
-					}
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	};
-
-	private static Timer serv_timer = new Timer(100, serv_taskPerformer);
-	private Timer timer = new Timer(50, this);
+	private Timer serv_timer = new Timer(100, this);
+//	private Timer timer = new Timer(50, this);
 
 	/**
 	 * Launch the application.
@@ -152,18 +150,17 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	 * @throws IOException
 	 */
 	public MazeUI() throws Exception {
-		int id = ClientMethods.newPlayer(5, 5, "test");
+		int id = ClientMethods.newPlayer(1, 1, "test");
 		gameIndex = ClientMethods.host(id);
 		joined = true;
 		ClientMethods.start(gameIndex);
 		ArrayList<Point> gameState = ClientMethods.gameState(gameIndex);
 		indexInGame = 0;
 		for (int i = 0; i < gameState.size(); i++)
-			players.add(new player(Color.red, 1 ,
-					1 ));
+			players.add(new player(Color.red, 1, 1));
 
 		serv_timer.start();
-		timer.start();
+//		timer.start();
 		// make new player and
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -172,8 +169,8 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(dim);
 
-		mazeWidth = 200 + 1;
-		mazeHeight = 200 + 1;
+		mazeWidth = 112 + 1;
+		mazeHeight = 112 + 1;
 
 		// System.out.println(getHeight() + "   " + dim.height);
 		blockSizeWidth = (dim.width) / mazeWidth;
@@ -197,6 +194,10 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			setSize(100, 100); // just something to let you see the window
 			setVisible(true);
 		}
+//		
+//		System.err.println("Full screen not supported");
+//		setSize(100, 100); // just something to let you see the window
+//		setVisible(true);
 	}
 
 	@Override
@@ -213,8 +214,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		}
 		for (player pl : players) {
 			g.setColor(pl.color);
-			g.fillOval(0,0, blockSizeWidth * 3,
-					blockSizeHeight * 3);
+			g.fillOval(pl.currj, pl.curri, blockSizeWidth * 2, blockSizeHeight * 2);
 		}
 	}
 
