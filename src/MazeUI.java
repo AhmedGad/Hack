@@ -202,9 +202,9 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			FontMetrics metrics = g.getFontMetrics();
 			int wid = SwingUtilities.computeStringWidth(metrics, curName);
 			g.setColor(players.get(i).color);
-			g.drawString(curName, screenSize.width-200, blockSizeHeight
-					* 3 + (counter * blockSizeHeight));
-			counter += 3;
+			g.drawString(curName, screenSize.width - 150, blockSizeHeight * 3
+					+ (counter * blockSizeHeight));
+			counter += 7;
 		}
 	}
 
