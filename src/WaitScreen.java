@@ -24,6 +24,9 @@ public class WaitScreen extends JFrame {
 
 	private JPanel contentPane;
 
+	Color colors[] = { Color.red, Color.black, Color.cyan, Color.YELLOW,
+			Color.GREEN, Color.magenta, Color.DARK_GRAY };
+
 	/**
 	 * Create the frame.
 	 * 
@@ -94,11 +97,11 @@ public class WaitScreen extends JFrame {
 							ArrayList<Point> state = ClientMethods
 									.gameState(gameIndex);
 							for (int i = 0; i < state.size(); i++) {
-								maze.players.add(new player(Color.red, state
+								maze.players.add(new player(colors[i], state
 										.get(i).x, state.get(i).y));
 							}
 
-//							maze.FullScreenFrame();
+							// maze.FullScreenFrame();
 							maze.gameIndex = gameIndex;
 							maze.indexInGame = indexInGame;
 							maze.setVisible(true);
