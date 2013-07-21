@@ -90,7 +90,7 @@ public class WaitScreen extends JFrame {
 						textArea.setText("");
 						String s = "";
 						for (int i = 0; i < names.size(); i++)
-							s += names.get(i);
+							s += names.get(i)+"\n";
 						textArea.setText(s);
 
 						if (ClientMethods.isRunning(gameIndex)) {
@@ -112,7 +112,7 @@ public class WaitScreen extends JFrame {
 							break;
 						}
 
-						Thread.sleep(100);
+						Thread.sleep(1000);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
