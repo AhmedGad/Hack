@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
@@ -112,23 +113,6 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 	// private Timer timer = new Timer(50, this);
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MazeUI frame = new MazeUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
-		});
-	}
-
 	public static int gameIndex, indexInGame;;
 
 	/**
@@ -200,21 +184,27 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 				}
 			}
 		}
+		g.setColor(Color.ORANGE);
+		g.fillRect(98 * blockSizeWidth, 98 * blockSizeHeight,
+				2 * blockSizeWidth, 2 * blockSizeHeight);
+
 		for (player pl : players) {
 			g.setColor(pl.color);
 			g.fillOval(pl.currj * blockSizeWidth, pl.curri * blockSizeHeight,
 					blockSizeWidth * 2, blockSizeHeight * 2);
 		}
-
 		int counter = 0;
+		Font f = new Font(Font.SANS_SERIF, 30, 50);
+
+		g.setFont(f);
 		for (int i = 0; i < playerNames.size(); i++) {
 			String curName = playerNames.get(i);
 			FontMetrics metrics = g.getFontMetrics();
 			int wid = SwingUtilities.computeStringWidth(metrics, curName);
 			g.setColor(players.get(i).color);
-			g.drawString(curName, screenSize.width - wid, blockSizeHeight * 3
-					+ (counter * blockSizeHeight));
-			counter++;
+			g.drawString(curName, screenSize.width - wid * 3, blockSizeHeight
+					* 3 + (counter * blockSizeHeight));
+			counter += 3;
 		}
 	}
 
@@ -266,8 +256,10 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			player p = players.get(indexInGame);
 			int ni = p.curri + di[dir];
 			int nj = p.currj + dj[dir];
-			if(p.curri==98 && p.currj==98)p.finished=true;
-			if(p.finished)return;
+			if (p.curri == 98 && p.currj == 98)
+				p.finished = true;
+			if (p.finished)
+				return;
 			if (ni < 0 || nj < 0)
 				return;
 			for (int i = 0; i < 2 && i + ni < mazeMap.length; i++)
