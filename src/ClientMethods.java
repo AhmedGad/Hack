@@ -55,10 +55,13 @@ public class ClientMethods {
 	}
 
 	// return game Index
-	static public int host(int id) throws Exception {
+	static public int host(int id, char[][] map) throws Exception {
 		HttpURLConnection httpConn = initConnection();
 		OutputStream os = httpConn.getOutputStream();
-		os.write(("host " + id).getBytes());
+		os.write(("host " + id + " ").getBytes());
+		for (int i = 0; i < map.length; i++)
+			os.write((new String(map[i]) + " ").getBytes());
+
 		os.close();
 		InputStream in = httpConn.getInputStream();
 		byte[] buffer = new byte[1000];
@@ -71,7 +74,8 @@ public class ClientMethods {
 	}
 
 	// return Index in game
-	static public int join(int gameIndex, int id) throws Exception {
+	static public int join(int gameIndex, int id, ArrayList<String> gameMap)
+			throws Exception {
 		HttpURLConnection httpConn = initConnection();
 		OutputStream os = httpConn.getOutputStream();
 		os.write(("join " + gameIndex + " " + id).getBytes());
@@ -83,7 +87,13 @@ public class ClientMethods {
 		while ((read = in.read(buffer)) != -1)
 			tempstr += new String(buffer, 0, read);
 		in.close();
-		return new Integer(tempstr.trim());
+		StringTokenizer tok = new StringTokenizer(tempstr);
+		int indexInGame = new Integer(tok.nextToken());
+
+		while (tok.hasMoreElements())
+			gameMap.add(tok.nextToken());
+
+		return indexInGame;
 	}
 
 	// return list of free games

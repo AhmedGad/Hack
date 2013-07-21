@@ -147,8 +147,10 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	 * @throws IOException
 	 */
 	public MazeUI() throws Exception {
+
+		// ///// for test /////
 		int id = ClientMethods.newPlayer(1, 1, "test");
-		gameIndex = ClientMethods.host(id);
+		gameIndex = ClientMethods.host(id, mazeMap);
 		joined = true;
 		ClientMethods.start(gameIndex);
 		ArrayList<Point> gameState = ClientMethods.gameState(gameIndex);
@@ -157,8 +159,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			players.add(new player(Color.red, 1, 1));
 
 		serv_timer.start();
-		// timer.start();
-		// make new player and
+		// ////////////////////
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, screenSize.width, screenSize.height);
@@ -192,9 +193,9 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			setVisible(true);
 		}
 
-//		System.err.println("Full screen not supported");
-//		setSize(100, 100); // just something to let you see the window
-//		setVisible(true);
+		// System.err.println("Full screen not supported");
+		// setSize(100, 100); // just something to let you see the window
+		// setVisible(true);
 	}
 
 	@Override
