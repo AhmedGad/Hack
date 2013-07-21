@@ -118,7 +118,7 @@ public class Generator {
 		}
 
 		int oldsize = used.size();
-		while (used.size() > 3 * oldsize / 4) {
+		while (used.size() > 4 * oldsize / 5) {
 			wall cur = used.remove((int) (Math.random() * used.size()));
 			if (getNum(cur.i, cur.j, v) < 2)
 				continue;
