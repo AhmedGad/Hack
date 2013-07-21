@@ -7,7 +7,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
@@ -20,7 +22,7 @@ import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-public class MazeUI extends JFrame {
+public class MazeUI extends JFrame implements KeyListener {
 
 	private JPanel contentPane;
 	private static char[][] mazeMap;
@@ -72,7 +74,7 @@ public class MazeUI extends JFrame {
 		generator.generate();
 		mazeMap = generator.getMap();
 		drawMap();
-		this.addKeyListener(null);
+		addKeyListener(this);
 	}
 
 	private void FullScreenFrame() {
@@ -108,5 +110,27 @@ public class MazeUI extends JFrame {
 			contentPane.add(new BlockWall("maze-image.gif", 0, i
 					* blockSizeHeight, blockSizeWidth, blockSizeHeight));
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent k) {
+		if (k.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			// GraphicsDevice gd = GraphicsEnvironment
+			// .getLocalGraphicsEnvironment().getDefaultScreenDevice();
+			// gd.setFullScreenWindow(null);
+			System.exit(0);
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+
 	}
 }
