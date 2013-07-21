@@ -26,7 +26,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static char[][] mazeMap;
+	public static char[][] mazeMap;
 	private static Dimension screenSize = Toolkit.getDefaultToolkit()
 			.getScreenSize();
 	private static int mazeWidth, mazeHeight;
@@ -149,21 +149,21 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	public MazeUI() throws Exception {
 
 		// ///// for test /////
-		int id = ClientMethods.newPlayer(1, 1, "test");
-		gameIndex = ClientMethods.host(id, mazeMap);
-		joined = true;
-		ClientMethods.start(gameIndex);
-		ArrayList<Point> gameState = ClientMethods.gameState(gameIndex);
-		indexInGame = 0;
-		for (int i = 0; i < gameState.size(); i++)
-			players.add(new player(Color.red, 1, 1));
-
-		serv_timer.start();
-		// ////////////////////
+		// int id = ClientMethods.newPlayer(1, 1, "test");
+		// gameIndex = ClientMethods.host(id, mazeMap);
+		// joined = true;
+		// ClientMethods.start(gameIndex);
+		// ArrayList<Point> gameState = ClientMethods.gameState(gameIndex);
+		// indexInGame = 0;
+		// for (int i = 0; i < gameState.size(); i++)
+		// players.add(new player(Color.red, 1, 1));
+		//
+		// serv_timer.start();
+		// // ////////////////////
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, screenSize.width, screenSize.height);
-		FullScreenFrame();
+//		FullScreenFrame();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(dim);
 
@@ -181,7 +181,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		addKeyListener(this);
 	}
 
-	private void FullScreenFrame() {
+	public void FullScreenFrame() {
 		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
 				.getDefaultScreenDevice();
 		if (gd.isFullScreenSupported()) {
