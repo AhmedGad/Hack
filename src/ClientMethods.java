@@ -187,7 +187,7 @@ public class ClientMethods {
 	public static ArrayList<String> getNameList(int gameIndex) throws Exception {
 		HttpURLConnection httpConn = initConnection();
 		OutputStream os = httpConn.getOutputStream();
-		os.write(("gameState " + gameIndex).getBytes());
+		os.write(("gameNameList " + gameIndex).getBytes());
 		os.close();
 		InputStream in = httpConn.getInputStream();
 		byte[] buffer = new byte[1000];

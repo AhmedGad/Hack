@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class MazeUI extends JFrame implements KeyListener, ActionListener {
@@ -33,8 +35,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	public static ArrayList<player> players = new ArrayList<player>();
 	private static ArrayList<Integer> games = new ArrayList<Integer>();
 	public static boolean joined = false;
-
-
+	public static ArrayList<String> playerNames = new ArrayList<String>();
 
 	// @Override
 	// public void actionPerformed(ActionEvent evt) {
@@ -152,7 +153,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, screenSize.width, screenSize.height);
-//		FullScreenFrame();
+		// FullScreenFrame();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(dim);
 
@@ -203,6 +204,17 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			g.setColor(pl.color);
 			g.fillOval(pl.currj * blockSizeWidth, pl.curri * blockSizeHeight,
 					blockSizeWidth * 2, blockSizeHeight * 2);
+		}
+
+		int counter = 0;
+		for (int i = 0; i < playerNames.size(); i++) {
+			String curName = playerNames.get(i);
+			FontMetrics metrics = g.getFontMetrics();
+			int wid = SwingUtilities.computeStringWidth(metrics, curName);
+			g.setColor(players.get(i).color);
+			g.drawString(curName, screenSize.width - wid, blockSizeHeight * 3
+					+ (counter * blockSizeHeight));
+			counter++;
 		}
 	}
 
@@ -284,6 +296,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 	}
 }
+
 class player {
 	Color color;
 	int curri, currj;
