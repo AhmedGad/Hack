@@ -98,7 +98,7 @@ public class MainMenu extends JFrame {
 							v.add("Game no. " + hosts.get(i));
 						ComboBoxModel model = new DefaultComboBoxModel(v);
 						comboBox.setModel(model);
-						Thread.sleep(100);
+						Thread.sleep(1500);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
