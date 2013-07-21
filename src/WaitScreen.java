@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,25 +17,12 @@ import java.util.ArrayList;
 import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class WaitScreen extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WaitScreen frame = new WaitScreen(false, null, 0, 0);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -43,7 +32,7 @@ public class WaitScreen extends JFrame {
 	 *            ,int indexInGame
 	 */
 	public WaitScreen(boolean isHost, final MazeUI maze, final int gameIndex,
-			int indexInGame) {
+			final int indexInGame) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 411);
 		contentPane = new JPanel();
@@ -64,6 +53,16 @@ public class WaitScreen extends JFrame {
 		scrollPane.setViewportView(textArea);
 
 		JButton btnNewButton = new JButton("GO !");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					ClientMethods.start(gameIndex);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		btnNewButton.setBounds(82, 311, 248, 56);
 		layeredPane.add(btnNewButton);
 
@@ -92,9 +91,21 @@ public class WaitScreen extends JFrame {
 						textArea.setText(s);
 
 						if (ClientMethods.isRunning(gameIndex)) {
+							ArrayList<Point> state = ClientMethods
+									.gameState(gameIndex);
+							for (int i = 0; i < state.size(); i++) {
+								maze.players.add(new player(Color.red, state
+										.get(i).x, state.get(i).y));
+							}
+
+//							maze.FullScreenFrame();
+							maze.gameIndex = gameIndex;
+							maze.indexInGame = indexInGame;
 							maze.setVisible(true);
-							maze.FullScreenFrame();
+							maze.repaint();
 							setVisible(false);
+							maze.serv_timer.start();
+							maze.joined = true;
 							break;
 						}
 
@@ -107,6 +118,6 @@ public class WaitScreen extends JFrame {
 		});
 
 		t.start();
-		
+
 	}
 }

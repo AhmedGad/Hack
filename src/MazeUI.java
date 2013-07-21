@@ -4,7 +4,6 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,21 +30,11 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			.getScreenSize();
 	private static int mazeWidth, mazeHeight;
 	private static int blockSizeWidth, blockSizeHeight;
-	private static ArrayList<player> players = new ArrayList<player>();
+	public static ArrayList<player> players = new ArrayList<player>();
 	private static ArrayList<Integer> games = new ArrayList<Integer>();
-	private static boolean joined = false;
+	public static boolean joined = false;
 
-	static class player {
-		Color color;
-		int curri, currj;
 
-		public player(Color color, int curri, int currj) {
-			this.color = color;
-			this.curri = curri;
-			this.currj = currj;
-		}
-
-	}
 
 	// @Override
 	// public void actionPerformed(ActionEvent evt) {
@@ -118,7 +107,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		repaint();
 	}
 
-	private Timer serv_timer = new Timer(100, this);
+	public Timer serv_timer = new Timer(100, this);
 
 	// private Timer timer = new Timer(50, this);
 
@@ -139,7 +128,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		});
 	}
 
-	private static int gameIndex, indexInGame;;
+	public static int gameIndex, indexInGame;;
 
 	/**
 	 * Create the frame.
@@ -294,4 +283,15 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		// TODO Auto-generated method stub
 
 	}
+}
+class player {
+	Color color;
+	int curri, currj;
+
+	public player(Color color, int curri, int currj) {
+		this.color = color;
+		this.curri = curri;
+		this.currj = currj;
+	}
+
 }

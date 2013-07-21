@@ -131,7 +131,7 @@ public class MainMenu extends JFrame {
 						e.printStackTrace();
 					}
 					setVisible(false);
-					WaitScreen frame = new WaitScreen(true, maze, gameIndex,
+					WaitScreen frame = new WaitScreen(false, maze, gameIndex,
 							indexInGame);
 					frame.setVisible(true);
 				}
@@ -145,17 +145,17 @@ public class MainMenu extends JFrame {
 					int id, gameIndex = 0;
 					try {
 						id = ClientMethods.newPlayer(1, 1, textField.getText());
-						ArrayList<String> gameMap = new ArrayList<String>();
-						maze.mazeMap = new char[gameMap.size()][];
-						for (int i = 0; i < gameMap.size(); i++)
-							maze.mazeMap[i] = gameMap.get(i).toCharArray();
+//						ArrayList<String> gameMap = new ArrayList<String>();
+						MazeGenerator gen = new MazeGenerator(100, 100);
+						gen.generate();
+						maze.mazeMap = gen.getMap();
 						gameIndex = ClientMethods.host(id, maze.mazeMap);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					setVisible(false);
-					WaitScreen frame = new WaitScreen(false, maze, gameIndex, 0);
+					WaitScreen frame = new WaitScreen(true, maze, gameIndex, 0);
 					frame.setVisible(true);
 
 				}

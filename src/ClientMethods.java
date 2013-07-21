@@ -180,7 +180,7 @@ public class ClientMethods {
 		while ((read = in.read(buffer)) != -1)
 			tempstr += new String(buffer, 0, read);
 		in.close();
-		return tempstr.equals("0") ? false : true;
+		return tempstr.trim().equals("0") ? false : true;
 	}
 
 	// return name list
