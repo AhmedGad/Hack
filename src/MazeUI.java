@@ -266,6 +266,8 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			player p = players.get(indexInGame);
 			int ni = p.curri + di[dir];
 			int nj = p.currj + dj[dir];
+			if(p.curri==98 && p.currj==98)p.finished=true;
+			if(p.finished)return;
 			if (ni < 0 || nj < 0)
 				return;
 			for (int i = 0; i < 2 && i + ni < mazeMap.length; i++)
@@ -300,6 +302,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 class player {
 	Color color;
 	int curri, currj;
+	boolean finished = false;
 
 	public player(Color color, int curri, int currj) {
 		this.color = color;
