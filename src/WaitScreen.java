@@ -100,8 +100,10 @@ public class WaitScreen extends JFrame {
 								maze.players.add(new player(colors[i], state
 										.get(i).x, state.get(i).y));
 							}
-
-							// maze.FullScreenFrame();
+							
+							maze.playerNames = ClientMethods.getNameList(gameIndex);
+							
+							 maze.FullScreenFrame();
 							maze.gameIndex = gameIndex;
 							maze.indexInGame = indexInGame;
 							maze.setVisible(true);
