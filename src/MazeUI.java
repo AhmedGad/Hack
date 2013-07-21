@@ -54,7 +54,7 @@ public class MazeUI extends JFrame {
 	public MazeUI() throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, screenSize.width, screenSize.height);
-//		FullScreenFrame();
+		FullScreenFrame();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(dim);
 
@@ -72,6 +72,7 @@ public class MazeUI extends JFrame {
 		generator.generate();
 		mazeMap = generator.getMap();
 		drawMap();
+		this.addKeyListener(null);
 	}
 
 	private void FullScreenFrame() {

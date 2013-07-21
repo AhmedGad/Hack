@@ -1,14 +1,27 @@
 import java.util.ArrayList;
 
-public class Generator {
-	public static void main(String[] args) {
-		generate();
+public class MazeGenerator {
+	private int width, height;
+	private int[][] map;
+
+	public MazeGenerator(int w, int h) {
+		this.width = w;
+		this.height = h;
+		map = new int[h][w];
 	}
 
-	public static void generate() {
-		int width = 88;
-		int height = 88;
-		int[][] map = new int[height][width];
+	public char[][] getMap() {
+		char[][] charMap = new char[map.length][map[0].length];
+		for (int i = 0; i < map.length; i++)
+			for (int j = 0; j < map[i].length; j++)
+				if (map[i][j] == 0)
+					charMap[i][j] = '.';
+				else
+					charMap[i][j] = '#';
+		return charMap;
+	}
+
+	public void generate() {
 		w = width / 4;
 		h = height / 4;
 
@@ -150,7 +163,8 @@ public class Generator {
 						if (map[ni][nj] != 0) {
 							int nni = ni + di[k];
 							int nnj = nj + dj[k];
-							if (nni >= 0 && nni < height && nnj >= 0 && nnj < width) {
+							if (nni >= 0 && nni < height && nnj >= 0
+									&& nnj < width) {
 								if (map[nni][nnj] != 0) {
 									cnt++;
 								}
@@ -158,7 +172,8 @@ public class Generator {
 						}
 					}
 				}
-				if(cnt>=2)map[i][j]++;
+				if (cnt >= 2)
+					map[i][j]++;
 			}
 		}
 		for (int i = 0; i < height; i++) {
