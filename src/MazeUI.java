@@ -1,35 +1,124 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.GridBagLayout;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class MazeUI extends JFrame implements KeyListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private static char[][] mazeMap;
 	private static Dimension screenSize = Toolkit.getDefaultToolkit()
 			.getScreenSize();
 	private static int mazeWidth, mazeHeight;
 	private static int blockSizeWidth, blockSizeHeight;
+	private static ArrayList<player> players = new ArrayList<player>();
+	private static ArrayList<Integer> games = new ArrayList<Integer>();
+	private static boolean joined = false;
+
+	static class player {
+		Color color;
+		int curri, currj, disti, distj;
+
+		public player(Color color, int curri, int currj, int disti, int distj) {
+			this.color = color;
+			this.curri = curri;
+			this.currj = currj;
+			this.disti = disti;
+			this.distj = distj;
+		}
+
+	}
+
+	static ActionListener taskPerformer = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent evt) {
+		}
+	};
+
+	static ActionListener serv_taskPerformer = new ActionListener() {
+		private int gameIndex = -1;
+		private int id = -1;
+		private int indexInGame = -1;
+
+		@Override
+		public void actionPerformed(ActionEvent evt) {
+			URL url;
+			try {
+				url = new URL("http://hackserver.herokuapp.com");
+				HttpURLConnection httpConn = (HttpURLConnection) url
+						.openConnection();
+				httpConn.setDoOutput(true);
+				httpConn.setRequestMethod("POST");
+				httpConn.connect();
+				OutputStream os = httpConn.getOutputStream();
+
+				if (!joined) {
+					os.write("getFreeGames".getBytes());
+					os.close();
+					InputStream in = httpConn.getInputStream();
+					byte[] buffer = new byte[1000];
+					int read;
+					String tempstr = "";
+					while ((read = in.read(buffer)) != -1)
+						tempstr += new String(buffer, 0, read);
+					in.close();
+
+					StringTokenizer tok = new StringTokenizer(tempstr);
+					games.clear();
+					while (tok.hasMoreElements())
+						games.add(new Integer(tok.nextToken()));
+				} else {
+					os.write(("gameState " + gameIndex).getBytes());
+					os.close();
+					InputStream in = httpConn.getInputStream();
+					byte[] buffer = new byte[1000];
+					int read;
+					String tempstr = "";
+					while ((read = in.read(buffer)) != -1)
+						tempstr += new String(buffer, 0, read);
+					in.close();
+
+					StringTokenizer tok = new StringTokenizer(tempstr);
+					int cnt = 0;
+					while (tok.hasMoreElements()) {
+						players.get(cnt).disti = new Integer(tok.nextToken())
+								* blockSizeHeight;
+						players.get(cnt).distj = new Integer(tok.nextToken())
+								* blockSizeWidth;
+						cnt++;
+					}
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	};
+
+	private static Timer serv_timer = new Timer(100, serv_taskPerformer);
+	private static Timer timer = new Timer(50, taskPerformer);
 
 	/**
 	 * Launch the application.
