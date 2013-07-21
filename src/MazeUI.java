@@ -47,8 +47,6 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 	}
 
-	static int di = 2, dj = 2;
-
 	// @Override
 	// public void actionPerformed(ActionEvent evt) {
 	// // if (pl.curri != pl.disti) {
@@ -108,10 +106,8 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 				StringTokenizer tok = new StringTokenizer(tempstr);
 				int cnt = 0;
 				while (tok.hasMoreElements()) {
-					players.get(cnt).curri = new Integer(tok.nextToken())
-							* blockSizeHeight;
-					players.get(cnt).currj = new Integer(tok.nextToken())
-							* blockSizeWidth;
+					players.get(cnt).curri = new Integer(tok.nextToken());
+					players.get(cnt).currj = new Integer(tok.nextToken());
 					cnt++;
 				}
 			}
@@ -123,7 +119,8 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	}
 
 	private Timer serv_timer = new Timer(100, this);
-//	private Timer timer = new Timer(50, this);
+
+	// private Timer timer = new Timer(50, this);
 
 	/**
 	 * Launch the application.
@@ -160,7 +157,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			players.add(new player(Color.red, 1, 1));
 
 		serv_timer.start();
-//		timer.start();
+		// timer.start();
 		// make new player and
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -194,7 +191,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 			setSize(100, 100); // just something to let you see the window
 			setVisible(true);
 		}
-//		
+
 //		System.err.println("Full screen not supported");
 //		setSize(100, 100); // just something to let you see the window
 //		setVisible(true);
@@ -214,7 +211,8 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		}
 		for (player pl : players) {
 			g.setColor(pl.color);
-			g.fillOval(pl.currj, pl.curri, blockSizeWidth * 2, blockSizeHeight * 2);
+			g.fillOval(pl.currj * blockSizeWidth, pl.curri * blockSizeHeight,
+					blockSizeWidth * 2, blockSizeHeight * 2);
 		}
 	}
 
@@ -261,14 +259,28 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		default:
 			break;
 		}
-		if (dir > -1)
+
+		if (dir > -1) {
+			player p = players.get(indexInGame);
+			int ni = p.curri + di[dir];
+			int nj = p.currj + dj[dir];
+			if (ni < 0 || nj < 0)
+				return;
+			for (int i = 0; i < 2 && i + ni < mazeMap.length; i++)
+				for (int j = 0; j < 2 && j + nj < mazeMap[0].length; j++)
+					if (mazeMap[ni + i][nj + j] == '#')
+						return;
 			try {
 				ClientMethods.move(gameIndex, indexInGame, dir);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
 	}
+
+	int[] di = { -1, 1, 0, 0 };
+	int[] dj = { 0, 0, 1, -1 };
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
