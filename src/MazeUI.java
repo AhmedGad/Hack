@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -35,14 +37,12 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 	static class player {
 		Color color;
-		int curri, currj, disti, distj;
+		int curri, currj;
 
-		public player(Color color, int curri, int currj, int disti, int distj) {
+		public player(Color color, int curri, int currj) {
 			this.color = color;
 			this.curri = curri;
 			this.currj = currj;
-			this.disti = disti;
-			this.distj = distj;
 		}
 
 	}
@@ -51,27 +51,26 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		for (player pl : players) {
-			if (pl.curri != pl.disti) {
-				if (pl.curri < pl.disti)
-					pl.curri += di;
-				else if (pl.curri > pl.distj)
-					pl.curri -= di;
-
-				if (Math.abs(pl.curri - pl.disti) < di)
-					pl.curri = pl.disti;
-			}
-
-			if (pl.currj != pl.distj) {
-				if (pl.currj < pl.distj)
-					pl.currj += dj;
-				else if (pl.currj > pl.distj)
-					pl.currj -= dj;
-
-				if (Math.abs(pl.currj - pl.distj) < dj)
-					pl.currj = pl.distj;
-			}
-		}
+		// if (pl.curri != pl.disti) {
+		// if (pl.curri < pl.disti)
+		// pl.curri += di;
+		// else if (pl.curri > pl.distj)
+		// pl.curri -= di;
+		//
+		// if (Math.abs(pl.curri - pl.disti) < di)
+		// pl.curri = pl.disti;
+		// }
+		//
+		// if (pl.currj != pl.distj) {
+		// if (pl.currj < pl.distj)
+		// pl.currj += dj;
+		// else if (pl.currj > pl.distj)
+		// pl.currj -= dj;
+		//
+		// if (Math.abs(pl.currj - pl.distj) < dj)
+		// pl.currj = pl.distj;
+		// }
+		// }
 		repaint();
 	}
 
@@ -111,9 +110,9 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 					StringTokenizer tok = new StringTokenizer(tempstr);
 					int cnt = 0;
 					while (tok.hasMoreElements()) {
-						players.get(cnt).disti = new Integer(tok.nextToken())
+						players.get(cnt).curri = new Integer(tok.nextToken())
 								* blockSizeHeight;
-						players.get(cnt).distj = new Integer(tok.nextToken())
+						players.get(cnt).currj = new Integer(tok.nextToken())
 								* blockSizeWidth;
 						cnt++;
 					}
@@ -160,8 +159,8 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		ArrayList<Point> gameState = ClientMethods.gameState(gameIndex);
 		indexInGame = 0;
 		for (int i = 0; i < gameState.size(); i++)
-			players.add(new player(Color.red, 5 * blockSizeHeight,
-					5 * blockSizeWidth, 5 * blockSizeHeight, 5 * blockSizeWidth));
+			players.add(new player(Color.red, 1 ,
+					1 ));
 
 		serv_timer.start();
 		timer.start();
@@ -188,21 +187,16 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 	}
 
 	private void FullScreenFrame() {
-
-		// GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
-		// .getDefaultScreenDevice();
-		//
-		// if (gd.isFullScreenSupported()) {
-		// setUndecorated(true);
-		// gd.setFullScreenWindow(this);
-		// } else {
-		// System.err.println("Full screen not supported");
-		// setSize(100, 100); // just something to let you see the window
-		// setVisible(true);
-		// }
-		System.err.println("Full screen not supported");
-		setSize(100, 100); // just something to let you see the window
-		setVisible(true);
+		GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
+				.getDefaultScreenDevice();
+		if (gd.isFullScreenSupported()) {
+			setUndecorated(true);
+			gd.setFullScreenWindow(this);
+		} else {
+			System.err.println("Full screen not supported");
+			setSize(100, 100); // just something to let you see the window
+			setVisible(true);
+		}
 	}
 
 	@Override
@@ -219,7 +213,7 @@ public class MazeUI extends JFrame implements KeyListener, ActionListener {
 		}
 		for (player pl : players) {
 			g.setColor(pl.color);
-			g.fillOval(pl.curri,pl.currj, blockSizeWidth * 3,
+			g.fillOval(0,0, blockSizeWidth * 3,
 					blockSizeHeight * 3);
 		}
 	}
